@@ -8,25 +8,21 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
       integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-        <script type="text/javascript" src="/scripts/actions.js"></script>
-
-    <script>
-        function showDiv() {
-            document.getElementById('welcomeDiv').style.display = "block";
-        }
-    </script>
+        <!-- <script type="text/javascript" src="scripts/actions.js"></script> -->
+        <script src = 'C:/data/CS_Projects/LSD/scripts/config.js'></script>
 
   </head>
 
   <body>
     <div class="container">
       <div class="row mt-2">
-        <div class="col"><h3>What is your location?</h3></div>
+        <div class="col"><h3>What are we dressing for?</h3></div>
       </div>
 
       <div class="form-group mt-3">
-        <label for="search-term">Enter your city's name:</label>
-        <input type="text" autocomplete="on" class="form-control" id="location-term">
+        <label for="search-term">Enter city:</label>
+        <input type="text" class="form-control" id="location-field" placeholder="Start Typing Here">
+        <div id="map-canvas"></div>
       </div>
 
       <div class="form-group">
@@ -34,7 +30,6 @@
       </div>
 
       <div id="welcomeDiv"  style="display:none;" class="answer_list" > WELCOME</div>
-        <input type="button" name="answer" value="Show Div" onclick="showDiv()" />
 
 
       <div class="card" style="width: 13rem;">
@@ -45,19 +40,89 @@
 
     </div>
 
-    <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"
-      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+     <script>
+        // import config from './scripts/config'
+        // var key = config.openweather
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
-      integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
-      crossorigin="anonymous"></script>
+        // function UserAction(location) {
+        //     var xhttp = new XMLHttpRequest();
+        //     xhttp.open("GET", "api.openweathermap.org/data/2.5/weather?q=" + location + "&APPID=" + key, true);
+        //     xhttp.send();
+        //     var response = JSON.parse(xhttp.responseText);
+        //     console.log(response)
+        //     return response
+        // }
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
-      integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
-      crossorigin="anonymous"></script>
+        console.log(config)
 
-    <script src="//code.jquery.com/jquery-latest.min.js"></script>
-    <script src="weatherAPI.js"></script> 
-    <script>window.SmartClosetSearchController.init()</script>-->
+        // fetch("/config")
+        //     // .then((resp) => resp.json())
+        //     .then(function(data){
+        //         console.log(data)
+        //         var myObj = JSON.parse(data)
+        //         console.log(data.gmaps)
+        //     })
+        //     .catch(function(err){
+        //         console.log(err)
+        //     });
+
+        function showDiv() {
+            document.getElementById('welcomeDiv').style.display = "block";
+        }
+        
+        function UserAction(){
+            
+            var location = document.getElementById("location-field").value
+
+            var url = "http://api.openweathermap.org/data/2.5/weather?q="+ location +"&APPID=905c74d7ddaa1cb4c409fab5c93c4cd1"
+
+            // pull from data.main.temp -> temp in kelvin
+            // kelvin to fahrenheit conversion: (9/5)*(data.main.temp-273)+32
+            // store that data in another variable and then push it to the arduino
+
+            fetch(url)
+                .then((resp) => resp.json())
+                .then(function(data){
+                    console.log(data)
+                    var temp = ((9/5)*(data.main.temp-273)+32).toFixed(2)
+                    console.log(temp)
+                    var field = document.getElementById('welcomeDiv')
+                    field.innerHTML = temp
+                    field.style.display = "block"
+
+                    // Check if it's raining!
+                    // TODO: Figure out what to do with the var
+                    var itsRaining = false
+                    var weatherType = data.weather["0"].main
+                    if (weatherType === "Rain" || weatherType === "Drizzle"){
+                        itsRaining = true
+                    }
+                    console.log(weatherType)
+                    console.log(itsRaining)
+
+                    })
+                .catch(function(err){
+                    var field = document.getElementById('welcomeDiv')
+                    field.innerHTML = "Whoops! Please enter the name of a CITY."
+                    field.style.display = "block"
+                });
+
+        }
+        
+    </script>
+
+    <script>
+        function activatePlacesSearch(){
+            var input = document.getElementById('location-field');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+        }
+    </script>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZPJCTxWe5wqLtrZaw1B1TZ075JYrh7do&libraries=places&callback=activatePlacesSearch"></script>
+
+    <!-- <script type="text/javascript" src="scripts/config.js"></script> -->
+
+    <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script> -->
   </body>
+
 </html>

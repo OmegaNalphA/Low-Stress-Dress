@@ -9,3 +9,7 @@ function UserAction(location) {
     console.log(response)
     return response
 }
+
+function showDiv() {
+    document.getElementById('welcomeDiv').style.display = "block";
+}

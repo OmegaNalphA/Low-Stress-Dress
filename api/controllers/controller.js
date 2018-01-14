@@ -11,6 +11,9 @@ exports.test = function(req, res) {
 	console.log("HEllo")
 	res.send("Hello")
 }
+// exports.config = function(req,res) {
+// 	res.sendFile('/scripts/config.json', { root : dir});
+// }
 exports.send_temp = function(req, res) {
   Temp.find().sort({date:1}).limit(1);
   res.json(Temp);

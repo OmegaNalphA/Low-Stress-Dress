@@ -10,4 +10,6 @@ module.exports = function(app) {
   	.get(controller.test);
   app.route('/temp')
     .get(controller.send_temp);
+  // app.route('/config')
+  // 	.get(controller.config);
 };
