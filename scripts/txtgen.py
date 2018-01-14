@@ -1,4 +1,6 @@
+from time import sleep
 import urllib.request, json
+import serial
 
 location = input("Type your destination city\n")
 print(location)
@@ -15,3 +17,15 @@ if rain == "Rain" or rain == "Drizzle":
 
 file = open("data.txt", "w")
 file.write("%s %s"%(isRain, temp))
+
+ser = serial.Serial('/dev/tty.COM3', 9600)
+counter = 32
+while True:
+	counter += 1
+	ser.write(chr(counter).encode())
+	print(ser.readline())
+	sleep(.1)
+	if counter == 255:
+		break
+
+ser.close()
