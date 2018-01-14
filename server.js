@@ -1,7 +1,7 @@
 var express = require('express'),
 app = express(),
 
-port = process.env.PORT || 8080,
+port = process.env.PORT || 8000,
 mongoose = require('mongoose'),
 Temp = require('./api/models/TempSchema'),
 bodyParser = require('body-parser');
